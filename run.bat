@@ -1,5 +1,5 @@
 @echo off
 title Alfredo - (Rewrited Discord v0.0.1) 
 :start
-node test.js
+node index.js
 goto start
