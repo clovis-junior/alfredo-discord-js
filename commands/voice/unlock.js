@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-=======
 const {EmbedBuilder}=require("discord.js");
->>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "unlock",
@@ -16,11 +12,7 @@ module.exports={
     async execute(message, client){
         if(client.lobbies.has(message.author.id)){
             const lobby=client.lobbies.get(message.author.id);  
-<<<<<<< HEAD
-            const embed=new MessageEmbed();
-=======
             const embed=new EmbedBuilder();
->>>>>>> ca5652c (Upload e organização de arquivos)
             if(lobby.lock){
                 lobby.channel.permissionOverwrites.set([
                     {

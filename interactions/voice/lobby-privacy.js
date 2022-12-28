@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-=======
 const {EmbedBuilder}=require("discord.js");
->>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "privacy",
@@ -10,11 +6,7 @@ module.exports={
     async execute(interaction, client, args){
         if(client.lobbies.has(interaction.user.id)){
             const lobby=client.lobbies.get(interaction.user.id);
-<<<<<<< HEAD
-            const embed=new MessageEmbed();
-=======
             const embed=new EmbedBuilder();
->>>>>>> ca5652c (Upload e organização de arquivos)
             
             if(lobby.lock){
                 lobby.channel.permissionOverwrites.set([

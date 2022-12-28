@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-
-const model=(member, user)=>{
-    return embed=new MessageEmbed()
-=======
 const {EmbedBuilder}=require("discord.js");
 
 const model=(member, user)=>{
     return embed=new EmbedBuilder()
->>>>>>> ca5652c (Upload e organização de arquivos)
     .setColor(member.displayColor || "#2a5bc5")
     .setTitle(`Avatar de ${member.displayName}`)
     .setURL(user.avatarURL({size: 1024, dynamic: true}))

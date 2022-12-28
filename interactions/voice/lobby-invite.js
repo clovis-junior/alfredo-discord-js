@@ -1,15 +1,8 @@
 
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-
-const model=(member, channel)=>{
-    return embed=new MessageEmbed()
-=======
 const {EmbedBuilder}=require("discord.js");
 
 const model=(member, channel)=>{
     return embed=new EmbedBuilder()
->>>>>>> ca5652c (Upload e organização de arquivos)
     .setColor(member.displayColor || "#2a5bc5")
     .setTitle(`Você convidou ${member.displayName} para seu lobby.`)
 };

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-=======
 const {EmbedBuilder}=require("discord.js");
->>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "help",
@@ -18,11 +14,7 @@ module.exports={
         if(!args[0]){
             const commands=client.commands.filter(command=> command.enabled !== false && command.show !== false);
 
-<<<<<<< HEAD
-            embed=new MessageEmbed()
-=======
             embed=new EmbedBuilder()
->>>>>>> ca5652c (Upload e organização de arquivos)
             .setColor("#2a5bc5");
 
             if(!commands)
@@ -36,11 +28,7 @@ module.exports={
         }else{
             const command=client.commands.get(args[0].toLowerCase()) || client.commands.find(cmd=> cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
 
-<<<<<<< HEAD
-            embed=new MessageEmbed()
-=======
             embed=new EmbedBuilder()
->>>>>>> ca5652c (Upload e organização de arquivos)
             .setColor("#2a5bc5");
 
             if(command){

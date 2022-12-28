@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-=======
 const {EmbedBuilder}=require("discord.js");
->>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "limit",
@@ -15,11 +11,7 @@ module.exports={
             if(limit <= 99){
                 lobby.channel.setUserLimit(limit)
                 .then(()=>{
-<<<<<<< HEAD
-                    const embed=new MessageEmbed()
-=======
                     const embed=new EmbedBuilder()
->>>>>>> ca5652c (Upload e organização de arquivos)
                     .setColor("#2a5bc5")
                     .setTitle(`Agora seu lobby comporta ${limit ? limit : "número ilimitado de"} pessoa(s).`);
 

@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-const {MessageEmbed}=require("discord.js");
-
-const model=(member, channel)=>{
-    return embed=new MessageEmbed()
-=======
 const {EmbedBuilder}=require("discord.js");
 
 const model=(member, channel)=>{
     return embed=new EmbedBuilder()
->>>>>>> ca5652c (Upload e organização de arquivos)
     .setColor(member.displayColor || "#2a5bc5")
     .setTitle(`${user.displayName} foi convidado para ${channel.name.replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "")}`);
 };
