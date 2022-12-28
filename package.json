@@ -1,0 +1,29 @@
+{
+  "name": "alfredo-discord-bot",
+  "version": "0.0.1",
+  "description": "A Discord Bot made with JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clovis-junior/alfredo.git"
+  },
+  "keywords": [
+    "discord",
+    "javascript",
+    "discordjs",
+    "bot"
+  ],
+  "author": "@Clovao97",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clovis-junior/alfredo/issues"
+  },
+  "homepage": "https://github.com/clovis-junior/alfredo#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
+  }
+}

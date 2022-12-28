@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const {MessageEmbed}=require("discord.js");
+=======
+const {EmbedBuilder}=require("discord.js");
+>>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "admin",

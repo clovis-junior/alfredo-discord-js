@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const {MessageEmbed}=require("discord.js");
+=======
+const {EmbedBuilder}=require("discord.js");
+>>>>>>> ca5652c (Upload e organização de arquivos)
 
 const model=(member, client)=>{
     let trophy_bronze=client.emojis.cache.find(emoji => emoji.name === "psnbronze") || "",
@@ -6,7 +10,11 @@ const model=(member, client)=>{
         trophy_gold=client.emojis.cache.find(emoji => emoji.name === "psngold") || "",
         trophy_platinum=client.emojis.cache.find(emoji => emoji.name === "psnplatinum") || "";
 
+<<<<<<< HEAD
     return embed=new MessageEmbed()
+=======
+    return embed=new EmbedBuilder()
+>>>>>>> ca5652c (Upload e organização de arquivos)
     .setColor("#003087")
     .setTitle(`PSN ID de ${member.displayName}`)
     .addField("Troféus", `${trophy_platinum} *0*・${trophy_gold} *0*・${trophy_silver} *0*・${trophy_bronze} *0*`);

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const {MessageEmbed}=require("discord.js");
+=======
+const {EmbedBuilder}=require("discord.js");
+>>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "bitrate",
@@ -16,7 +20,11 @@ module.exports={
             if(args[0] && (parseInt(args[0]) > 7 || parseInt(args[0]) < 97))
                 lobby.channel.setBitrate(parseInt(args[0]) * 1000)
                 .then(()=>{
+<<<<<<< HEAD
                     const embed=new MessageEmbed()
+=======
+                    const embed=new EmbedBuilder()
+>>>>>>> ca5652c (Upload e organização de arquivos)
                     .setColor("#2a5bc5")
                     .setTitle(`Agora ${lobby.channel.name.replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, "")} tem a taxa de bits de ${lobby.channel.bitrate} kbps.`);
 

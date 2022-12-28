@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 const {MessageEmbed}=require("discord.js");
+=======
+const {EmbedBuilder}=require("discord.js");
+>>>>>>> ca5652c (Upload e organização de arquivos)
 
 module.exports={
     name: "bitrate",
@@ -11,7 +15,11 @@ module.exports={
             if(bitrate_value >= 8 && bitrate_value <= 96){
                 lobby.channel.setBitrate(bitrate_value * 1000)
                 .then(()=>{
+<<<<<<< HEAD
                     const embed=new MessageEmbed()
+=======
+                    const embed=new EmbedBuilder()
+>>>>>>> ca5652c (Upload e organização de arquivos)
                     .setColor("#2a5bc5")
                     .setTitle(`Agora seu lobby tem a taxa de bits de ${lobby.channel.bitrate} kbps.`);
 
