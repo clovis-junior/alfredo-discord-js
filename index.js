@@ -1,24 +1,17 @@
+require('dotenv').config();
 
-/**
- * @name            Alfredo
- * @description     Alfredo bot for Discord, rewrited edition.
- * @author          Clovis Junior
- * @version         0.0.1
- * @since           2016
- */
+const fs = require('fs');
+const path = require('path');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
 
-/* ========================================================
-    Packages
-======================================================== */
-require("dotenv").config();
+console.time('-> Tempo de inicialização');
 
-const fs=require("fs");
-const {Client, GatewayIntentBits, Collection}=require("discord.js");
-const client=new Client({
+const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.GuildMessageTyping,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.DirectMessages,
@@ -28,89 +21,78 @@ const client=new Client({
     ]
 });
 
-client.commands=new Collection();
-client.interactions=new Collection();
-client.lobbies=new Collection();
-client.cooldown=new Set();
+client.interactions = new Collection();
+client.voices = new Collection();
+client.cooldowns = new Collection();
 
 /* Import Events ------------------------------------------ */
-console.log("Carrengado eventos...");
-const events=fs.readdirSync("./events").filter(file=> file.endsWith(".js"));
-for(const file of events){
-    const event=require(`./events/${file}`);
 
-    if(event.once)
-        client.once(event.name, (...args)=> event.execute(client, ...args));
+console.log('Carregando eventos...');
+
+const eventsPath = path.join(__dirname, 'events');
+const events = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+
+for (const file of events) {
+    const event = require(path.join(eventsPath, file));
+
+    if (!event.name || typeof event.execute !== 'function') {
+        console.warn(`-> Evento inválido ignorado: ${file}`);
+        continue;
+    }
+
+    if (event.once)
+        client.once(event.name, (...args) => event.execute(client, ...args));
     else
-        client.on(event.name, (...args)=> event.execute(client, ...args));
+        client.on(event.name, (...args) => event.execute(client, ...args));
 
     console.log(`-> Evento "${event.name}" carregado com sucesso!`);
-    delete require.cache[require.resolve(`./events/${file}`)]
 }
 
-/* Import Commands ------------------------------------------ */
-console.log("Carrengado comandos...");
-const commands=fs.readdirSync("./commands");
-for(const folder of commands){
-	const commands=fs.readdirSync(`./commands/${folder}`).filter(file=> file.endsWith(".js"));
+/* Import Interactions ------------------------------------------ */
 
-    for(const file of commands){
-        const command=require(`./commands/${folder}/${file}`);
-        client.commands.set(command.name.toLowerCase(), command);
-        console.log(`-> Comando "${command.name}" carregado com sucesso!`);
-        delete require.cache[require.resolve(`./commands/${folder}/${file}`)]
-    }
-}
+console.log('Carregando comandos..');
 
-/* Import Interarations ------------------------------------------ */
-const interactions=fs.readdirSync("./interactions");
-for(const folder of interactions){
-	const interactions=fs.readdirSync(`./interactions/${folder}`).filter(file=> file.endsWith(".js"));
+const interactionsPath = path.join(__dirname, 'interactions');
+const interactionEntries = fs.readdirSync(interactionsPath, { withFileTypes: true });
 
-    for(const file of interactions){
-        const interaction=require(`./interactions/${folder}/${file}`);
+for (const entry of interactionEntries) {
+    const entryPath = path.join(interactionsPath, entry.name);
+
+    // Se for arquivo .js direto em /interactions
+    if (entry.isFile() && entry.name.endsWith('.js')) {
+        const interaction = require(entryPath);
+
+        if (!interaction.name || typeof interaction.execute !== 'function') {
+            console.warn(`-> Comando inválido ignorado: ${entry.name}`);
+            continue;
+        }
+
         client.interactions.set(interaction.name, interaction);
-        delete require.cache[require.resolve(`./interactions/${folder}/${file}`)]
+        console.log(`-> Comando "${interaction.name}" carregado com sucesso!`);
+        continue;
+    }
+
+    // Se for pasta
+    if (entry.isDirectory()) {
+        const files = fs
+            .readdirSync(entryPath)
+            .filter(file => file.endsWith('.js'));
+
+        for (const file of files) {
+            const filePath = path.join(entryPath, file);
+            const interaction = require(filePath);
+
+            if (!interaction.name || typeof interaction.execute !== 'function') {
+                console.warn(`-> Comando inválido ignorado: ${entry.name}/${file}`);
+                continue;
+            }
+
+            client.interactions.set(interaction.name, interaction);
+            console.log(`-> Comando "${interaction.name}" carregado com sucesso!`);
+        }
     }
 }
 
-/* ========================================================
-    Events
-======================================================== */
-client.on("messageReactionAdd", async (reaction, user)=>{
-    if(user.bot) return;
-    if(!reaction.message.guild) return;
+/* Start ------------------------------------------ */
 
-    if(reaction.message.id == "957847757148799000") {
-        let blueTeamRole=reaction.message.guild.roles.cache.get("957833369226461185"),
-            blueTeamEmoji="🟦", redTeamEmoji="🟥",
-            redTeamRole=reaction.message.guild.roles.cache.get("957833440605139035");
-
-        const member=reaction.message.guild.members.cache.get(user.id);
-
-        if(reaction.emoji.name == blueTeamEmoji && !member.roles.cache.has(blueTeamRole.id))
-            member.roles.add(blueTeamRole.id);
-
-        if(reaction.emoji.name == redTeamEmoji && !member.roles.cache.has(redTeamRole.id))
-            member.roles.add(redTeamRole.id);
-    }
-});
-client.on("messageReactionRemove", async (reaction, user)=>{
-    if(user.bot) return;
-    if(!reaction.message.guild) return;
-
-    if(reaction.message.id == "957847757148799000") {
-        let blueTeamRole=reaction.message.guild.roles.cache.get("957833369226461185"),
-            blueTeamEmoji="🟦", redTeamEmoji="🟥",
-            redTeamRole=reaction.message.guild.roles.cache.get("957833440605139035");
-
-        const member=reaction.message.guild.members.cache.get(user.id);
-
-        if(reaction.emoji.name == blueTeamEmoji && member.roles.cache.has(blueTeamRole.id))
-            member.roles.remove(blueTeamRole.id);
-
-        if(reaction.emoji.name == redTeamEmoji && member.roles.cache.has(redTeamRole.id))
-            member.roles.remove(redTeamRole.id);
-    }
-});
-client.login(process.env.DISCORD_TOKEN)
+client.login(process.env.DISCORD_TOKEN);

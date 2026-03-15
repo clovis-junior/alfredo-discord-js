@@ -1,7 +1,22 @@
+# Dependencies
+node_modules/
+/jspm_packages/
+.npm/
+
+# Testing
+/coverage/
+
+# Production
+/build/
+/dist/
+
+# Environment files
 .env
-https.js
-utils.js
-run.bat
-slash.js
-index.old.js
-test.bat
+.env.*
+
+# IDE files (examples)
+.idea/
+.vscode/
+*.suo
+*.user
+*.lock

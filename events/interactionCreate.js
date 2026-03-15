@@ -1,23 +1,35 @@
-module.exports={
-    name: "interactionCreate",
+module.exports = {
+    name: 'interactionCreate',
     once: false,
 
-    async execute(client, interaction){
-        if(!interaction.isCommand()) return;
-        if(!client.interactions.has(interaction.commandName)) return;    
-    
-        try{
-            //await interaction.defer({ephemeral: true}).catch(()=> {});
-            const args=[];
-            interaction.options.data.map(option=>{
-                args.push(option.name);
-            });
+    async execute(client, interaction) {
+        if (!interaction.isChatInputCommand()) return;
 
-            //console.log(args);
-    
-            await client.interactions.get(interaction.commandName).execute(interaction, client, args);   
-        }catch(err){
-            await interaction.reply({content: `Ocorreu um erro na execução:\n\`\`\`${err}\`\`\``, ephemeral: true});
-        }    
+        const command = client.interactions.get(interaction.commandName);
+        
+        if (!command) return;
+
+        try {
+            await command.execute(client, interaction);
+        } catch (err) {
+            console.error(`[interactionCreate] Comando: ${interaction.commandName}`, err);
+
+            const message = process.env.NODE_ENV === 'development'
+            ? `Ocorreu um erro na execução:\n\`\`\`${String(err)}\`\`\``
+            : '❌ Ocorreu um erro ao executar este comando.';
+
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({
+                    content: message,
+                    ephemeral: true
+                }).catch(() => {});
+                return;
+            }
+
+            await interaction.reply({
+                content: message,
+                ephemeral: true
+            }).catch(() => {});
+        }
     }
-}
+};
