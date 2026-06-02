@@ -18,7 +18,7 @@ module.exports = {
     async execute(client, interaction) {
         if (!client.voices.has(interaction.user.id)) {
             return await interaction.reply({
-                content: `<@${interaction.user.id}> você não tem um voice criado.`,
+                content: `<@${interaction.user.id}> você não tem um lobby criado.`,
                 flags: MessageFlags.Ephemeral
             });
         }
@@ -26,8 +26,6 @@ module.exports = {
         const voice = client.voices.get(interaction.user.id);
         const bitrateValue = interaction.options.getInteger('valor');
         const maxBitrate = Math.floor(interaction.guild.maximumBitrate / 1000);
-
-        console.log(bitrateValue);
 
         if (bitrateValue < 8 || bitrateValue > maxBitrate) {
             return await interaction.reply({
@@ -43,7 +41,7 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(getEmbedColor(interaction))
-                .setTitle(`Agora seu voice tem a taxa de bits de ${bitrateValue} kbps.`);
+                .setTitle(`Agora seu lobby tem a taxa de bits de ${bitrateValue} kbps.`);
 
             return await interaction.reply({
                 embeds: [embed],
@@ -53,9 +51,9 @@ module.exports = {
             console.error('[voice bitrate]', err);
 
             return await interaction.reply({
-                content: '❌ Ocorreu um erro ao alterar a taxa de bits do voice.',
+                content: '❌ Ocorreu um erro ao alterar a taxa de bits do lobby.',
                 flags: MessageFlags.Ephemeral
-            }).catch(() => { });
+            });
         }
     }
 };

@@ -53,7 +53,7 @@ module.exports = {
             await interaction.reply({
                 content: '❌ Não consegui convidar este usuário.',
                 flags: MessageFlags.Ephemeral
-            }).catch(() => { });
+            });
 
         }
     }

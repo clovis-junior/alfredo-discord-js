@@ -4,12 +4,12 @@ const { SlashCommandBuilder } = require('discord.js');
 
 const subcommands = new Map();
 
-const subcommandsPath = path.join(__dirname, 'voice');
+const subcommandsPath = path.join(__dirname, 'challenge');
 const files = fs.readdirSync(subcommandsPath).filter(file => file.endsWith('.js'));
 
 const builder = new SlashCommandBuilder()
-    .setName('lobby')
-    .setDescription('Gerencia seu lobby de voz');
+    .setName('challenge')
+    .setDescription('Sistema competitivo');
 
 for (const file of files) {
     const subcommand = require(path.join(subcommandsPath, file));
@@ -60,7 +60,7 @@ for (const file of files) {
 }
 
 module.exports = {
-    name: 'lobby',
+    name: 'challenge',
     data: builder,
 
     async execute(client, interaction) {
@@ -71,9 +71,9 @@ module.exports = {
             return interaction.reply({
                 content: '❌ Subcomando inválido.',
                 flags: MessageFlags.Ephemeral
-            });
+            })
         }
 
         await subcommand.execute(client, interaction)
     }
-};
+}

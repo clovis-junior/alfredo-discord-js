@@ -69,7 +69,7 @@ module.exports = {
             return await interaction.reply({
                 content: '❌ Ocorreu um erro ao renomear o lobby.',
                 flags: MessageFlags.Ephemeral
-            }).catch(() => {});
+            });
         }
     }
 };

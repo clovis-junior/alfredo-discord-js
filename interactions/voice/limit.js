@@ -55,7 +55,7 @@ module.exports = {
             return await interaction.reply({
                 content: '❌ Ocorreu um erro ao alterar o limite do voice.',
                 flags: MessageFlags.Ephemeral
-            }).catch(() => { });
+            });
 
         }
     }

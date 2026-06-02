@@ -51,7 +51,7 @@ module.exports = {
             return await interaction.reply({
                 content: '❌ Ocorreu um erro ao alterar a privacidade do voice.',
                 flags: MessageFlags.Ephemeral
-            }).catch(() => {});
+            });
         }
     }
 };

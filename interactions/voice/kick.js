@@ -65,7 +65,7 @@ module.exports = {
             return await interaction.reply({
                 content: '❌ Ocorreu um erro ao expulsar esse usuário do lobby.',
                 flags: MessageFlags.Ephemeral
-            }).catch(() => {});
+            });
         }
     }
 };
