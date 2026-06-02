@@ -25,33 +25,41 @@ module.exports = {
         const gameId = interaction.options.getString('game');
         const playerName = interaction.options.getString('player');
 
+        await interaction.deferReply({
+            content: 'Fazendo a busca...',
+            flags: MessageFlags.Loading
+        });
+
         try {
             const game = getById(gameId);
-            const player = await game.members.getMemberCareer(565414, playerName ? playerName : 'Mexilhao');
+            const player = await game.members.findByName(565414, playerName ? playerName : 'Mexilhao');
 
             const embed = new EmbedBuilder()
                 .setColor(getEmbedColor(interaction))
                 .setTitle(`Estatísticas de ${player?.proName}`)
+                //.setThumbnail()
                 .addFields(
+                    { name: 'Posição', value: String(player?.favoritePosition || player?.position), inline: true },
                     { name: 'Jogos', value: String(player?.games), inline: true },
                     { name: 'Melhor em Campo', value: String(player?.motm), inline: true },
                     { name: 'Média', value: String(player?.rating), inline: true },
                     { name: 'Gols', value: String(player?.goals), inline: true },
                     { name: 'Assistências', value: String(player?.assists), inline: true },
-                    { name: 'Taxa de Vitórias', value: `${player?.wins}%`, inline: true }
+                    { name: 'Taxa de Vitórias', value: `${player?.winRate}%`, inline: true }
                 )
                 .setTimestamp()
                 .setFooter({ text: `${game.icon} ${game.name}` })
 
-            return await interaction.reply({
-                embeds: [embed]
+            return await interaction.editReply({
+                embeds: [embed],
+                flags: MessageFlags.SuppressNotifications
             })
         } catch (err) {
             console.error(err);
 
-            return await interaction.reply({
+            return await interaction.editReply({
                 content: '❌ Ocorreu um erro ao mostrar o perfil.',
-                flags: MessageFlags.Ephemeral
+                flags: MessageFlags.Ephemeral 
             })
         }
     }

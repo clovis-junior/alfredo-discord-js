@@ -2,48 +2,39 @@ const { SlashCommandBuilder, MessageFlags, PermissionsBitField } = require('disc
 
 module.exports = {
     name: 'clear',
-    data: new SlashCommandBuilder()
-        .setName('clear')
-        .setDescription('Exclui mensagens do canal')
-        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageMessages),
+    data: {
+        description: 'Exclui mensagens do canal',
+        permissions: [PermissionsBitField.Flags.ManageMessages],
+        options: [{
+            type: 4,
+            name: 'size',
+            description: 'Quantidade de mensagens',
+            required: true,
+            minValue: 1,
+            maxValue: 100
+        }]
+    },
 
     async execute(client, interaction) {
+        const amount = interaction.options.getInteger('size');
 
-        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-            return await interaction.reply({
-                content: '❌ Você não tem permissão para excluir mensagens.',
-                flags: MessageFlags.Ephemeral
-            });
-        }
-
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply({
+            content: 'Fazendo a faxina...',
+            flags: MessageFlags.Ephemeral
+        });
 
         try {
-            const messages = await interaction.channel.messages.fetch();
-            let deleted = 0;
+            const deleted = await interaction.channel.bulkDelete(amount, true);
 
-            for (const [, message] of messages) {
-                if (!message.pinned && message.deletable) {
-                    await message.delete().catch(() => { });
-                    deleted++;
-                }
-            }
-
-            await interaction.followUp({
-                content: `Excluí **${deleted} ${deleted > 1 ? 'mensagens' : 'mensagem'}**.`,
-                flags: MessageFlags.Ephemeral
-            });
+            await interaction.editReply({
+                content: `🗑️ Excluí **${deleted.size} mensagens**.`
+            })
         } catch (err) {
             console.error('[clear]', err);
 
-            const message = process.env.NODE_ENV === 'development'
-                ? `Ocorreu um erro na execução:\n\`\`\`${String(err)}\`\`\``
-                : '❌ Ocorreu um erro ao excluir as mensagens.';
-
-            await interaction.followUp({
-                content: message,
-                flags: MessageFlags.Ephemeral
-            }).catch(() => { });
+            await interaction.editReply({
+                content: '❌ Ocorreu um erro ao excluir as mensagens.'
+            })
         }
     }
 };

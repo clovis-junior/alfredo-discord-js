@@ -8,21 +8,6 @@ function normalize(name) {
         ?.trim()
 }
 
-async function getMemberCareer(clubId, search) {
-    if (!clubId)
-        throw new Error('Club ID is required');
-
-    if (!search)
-        throw new Error('Search term is required');
-
-    const data = await getClubCareer(clubId);
-    const term = normalize(search);
-
-    return data?.members?.find(member =>
-        normalize(member?.name)?.includes(term)
-    )
-}
-
 async function findByName(clubId, search) {
     if (!clubId)
         throw new Error('Club ID is required');
@@ -34,11 +19,11 @@ async function findByName(clubId, search) {
     const term = normalize(search);
 
     return data?.find(member =>
-        normalize(member?.name)?.includes(term)
+        normalize(member?.name)?.includes(term) ||
+        normalize(member?.proName)?.includes(term)
     )
 }
 
 module.exports = {
-    getMemberCareer,
     findByName
 };

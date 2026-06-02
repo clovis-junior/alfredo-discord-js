@@ -24,6 +24,11 @@ module.exports = {
         const gameId = interaction.options.getString('game');
         const teamName = interaction.options.getString('team');
 
+        await interaction.deferReply({
+            content: 'Fazendo a busca...',
+            flags: MessageFlags.Loading
+        });
+
         try {
             const game = getById(gameId);
             const club = await game.clubs.getByName(teamName);
@@ -32,10 +37,14 @@ module.exports = {
                 .setColor(getEmbedColor(interaction))
                 .setTitle(`Estatísticas de ${club.name}`)
                 .addFields(
-                    { name: 'Nome do Estádio', value: String(club?.stadium), inline: false },
-                    { name: 'Total de Partidas', value: String(club?.stats?.games), inline: true },
+                    { name: 'Nome do Estádio', value: String(club?.stadium), inline: true },
+                    { name: 'Total de Partidas', value: String(club?.stats?.games), inline: true }
+                )
+                .addFields(
                     { name: 'Gols Feitos', value: String(club?.stats?.goals), inline: true },
-                    { name: 'Gols Sofridos', value: String(club?.stats?.goalsAgainst), inline: true }
+                    { name: 'Gols Sofridos', value: String(club?.stats?.goalsAgainst), inline: true },
+                    { name: 'Média de Gols', value: String(club?.stats?.goalsAverage), inline: true },
+                    { name: 'Saldo de Gols', value: String(club?.stats?.goalsDifference), inline: true }
                 )
                 .addFields(
                     { name: 'Vitórias', value: String(club?.stats?.wins), inline: true },
@@ -52,13 +61,14 @@ module.exports = {
                 .setTimestamp()
                 .setFooter({ text: `${game.icon} ${game.name}` })
 
-            return await interaction.reply({
-                embeds: [embed]
+            return await interaction.editReply({
+                embeds: [embed],
+                flags: MessageFlags.SuppressNotifications
             })
         } catch (err) {
             console.error(err);
 
-            return await interaction.reply({
+            return await interaction.editReply({
                 content: '❌ Ocorreu um erro ao mostrar o perfil.',
                 flags: MessageFlags.Ephemeral
             })

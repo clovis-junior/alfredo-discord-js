@@ -100,6 +100,7 @@ async function getMembers(clubId) {
 }
 
 module.exports = {
+    getMembers,
     getByName,
     getById
 }

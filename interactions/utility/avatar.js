@@ -1,35 +1,37 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, MessageFlags } = require('discord.js');
 const getEmbedColor = require('../../utils/getEmbedColor');
 
-const model = (interaction) => {
+const model = (interaction, member) => {
     return new EmbedBuilder()
         .setColor(getEmbedColor(interaction))
-        .setTitle(`Avatar de ${interaction?.member.displayName}`)
-        .setURL(interaction?.user.avatarURL({ size: 1024, dynamic: true }))
-        .setImage(interaction?.user.avatarURL({ size: 512, dynamic: true }))
+        .setTitle(`Avatar de ${member.displayName}`)
+        .setURL(
+            member.user.avatarURL({ size: 1024 })
+        )
+        .setImage(
+            member.user.avatarURL({ size: 1024 })
+        );
 };
 
 module.exports = {
     name: 'avatar',
-    data: new SlashCommandBuilder()
-        .setName('avatar')
-        .setDescription('Mostra o avatar de um usuário')
-        .addUserOption(option =>
-            option
-                .setName('usuario')
-                .setDescription('Usuário para mostrar o avatar')
-                .setRequired(false)
-        ),
+    data: {
+        description: 'Mostra o avatar de um usuário',
+        options: [{
+            type: 6,
+            name: 'user',
+            description: 'Usuário para mostrar o avatar',
+            required: false
+        }]
+    },
 
     async execute(client, interaction) {
-        if (interaction?.options.data.map(user => user).length > 0) {
-            await interaction?.deferReply();
+        const member = interaction.options.getMember('usuario') ||
+            interaction.member;
 
-            return await interaction?.options.data.map(({ user }) => user).forEach(user => {
-                interaction?.followUp({ embeds: [model(interaction?.guild?.members?.cache?.get(user.id), user)] })
-            });
-        }
-
-        return await interaction?.reply({ embeds: [model(interaction)] });
+        return interaction.reply({
+            embeds: [model(interaction, member)],
+            flags: MessageFlags.SuppressNotifications
+        })
     }
 }
