@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { MessageFlags, EmbedBuilder } = require('discord.js');
 const getEmbedColor = require('../../utils/getEmbedColor');
 
 module.exports = {
@@ -15,17 +15,17 @@ module.exports = {
             .setColor(getEmbedColor(interaction))
             .addFields({
                 name: 'Delay de Resposta',
-                value: `${responseTime} ms`,
+                value: `\`${responseTime} ms\``,
                 inline: true
             }, {
                 name: 'Delay da API',
-                value: `${apiPing} ms`,
-                inline: true
-            })
-            .setTimestamp();
+                value: `\`${apiPing} ms\``,
+                inline: false
+            });
 
         return interaction.reply({
-            embeds: [embed]
+            embeds: [embed],
+            flags: MessageFlags.SuppressNotifications
         });
     }
 }

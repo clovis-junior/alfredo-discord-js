@@ -33,9 +33,16 @@ module.exports = {
             const game = getById(gameId);
             const club = await game.clubs.getByName(teamName);
 
+            if (!club)
+                return await interaction.editReply({
+                    content: '\`❌ Nenhum time foi encontrado no Pro Clubs!\`',
+                    flags: MessageFlags.Ephemeral 
+                });
+
             const embed = new EmbedBuilder()
                 .setColor(getEmbedColor(interaction))
-                .setTitle(`Estatísticas de ${club.name}`)
+                .setTitle(`Estatísticas de ${club?.name}`)
+                .setThumbnail(club?.emblem)
                 .addFields(
                     { name: 'Nome do Estádio', value: String(club?.stadium), inline: true },
                     { name: 'Total de Partidas', value: String(club?.stats?.games), inline: true }
@@ -43,20 +50,20 @@ module.exports = {
                 .addFields(
                     { name: 'Gols Feitos', value: String(club?.stats?.goals), inline: true },
                     { name: 'Gols Sofridos', value: String(club?.stats?.goalsAgainst), inline: true },
-                    { name: 'Média de Gols', value: String(club?.stats?.goalsAverage), inline: true },
+                    { name: 'Média de Gols', value: String(club?.stats?.goalsAverage.toFixed(1)), inline: true },
                     { name: 'Saldo de Gols', value: String(club?.stats?.goalsDifference), inline: true }
                 )
                 .addFields(
                     { name: 'Vitórias', value: String(club?.stats?.wins), inline: true },
                     { name: 'Derrotas', value: String(club?.stats?.losses), inline: true },
                     { name: 'Empates', value: String(club?.stats?.ties), inline: true },
-                    { name: 'Taxa de Vitórias', value: `${club?.stats?.winRate}%`, inline: false }
+                    { name: 'Taxa de Vitórias', value: `*${club?.stats?.winRate.toFixed(1)}%*`, inline: false }
                 )
                 .addFields(
                     { name: 'Partidas sem sofrer gol', value: String(club?.stats?.cleanSheets), inline: false },
-                    { name: 'Artilheiro', value: `${club?.stats?.topScorer?.proName} com ${club?.stats?.topScorer?.goals} na carreira`, inline: false },
-                    { name: 'Líder em Assistências', value: `${club?.stats?.topAssist?.proName} com ${club?.stats?.topAssist?.assists} na carreira`, inline: false },
-                    { name: 'Melhor Média', value: `${club?.stats?.bestRating?.proName} com ${club?.stats?.bestRating?.rating} em ${club?.stats?.bestRating?.games} jogos na carreira`, inline: false }
+                    { name: 'Artilheiro', value: `**${club?.stats?.topScorer?.proName}** - \`${club?.stats?.topScorer?.goals} gols na carreira\``, inline: false },
+                    { name: 'Líder em Assistências', value: `**${club?.stats?.topAssist?.proName}** - \`${club?.stats?.topAssist?.assists} assistências na carreira\``, inline: false },
+                    { name: 'Melhor Média', value: `**${club?.stats?.bestRating?.proName}** - \`${club?.stats?.bestRating?.rating} em ${club?.stats?.bestRating?.games} jogos na carreira\``, inline: false }
                 )
                 .setTimestamp()
                 .setFooter({ text: `${game.icon} ${game.name}` })
