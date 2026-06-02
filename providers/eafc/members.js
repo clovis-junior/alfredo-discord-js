@@ -9,11 +9,7 @@ function normalize(name) {
 }
 
 async function findByName(clubId, search) {
-    if (!clubId)
-        throw new Error('Club ID is required');
-
-    if (!search)
-        throw new Error('Search term is required');
+    if (!clubId || !search) return null;
 
     const data = await getMembers(clubId);
     const term = normalize(search);

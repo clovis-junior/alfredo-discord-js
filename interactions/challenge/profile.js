@@ -32,7 +32,14 @@ module.exports = {
 
         try {
             const game = getById(gameId);
-            const player = await game.members.findByName(565414, playerName ? playerName : 'Mexilhao');
+            const player = await game.members.findByName(565414, playerName ? playerName : '');
+
+            if (!player) {
+                return await interaction.editReply({
+                    content: 'Você não possui um jogador no Pro Clubs.',
+                    flags: MessageFlags.Ephemeral 
+                })
+            }
 
             const embed = new EmbedBuilder()
                 .setColor(getEmbedColor(interaction))

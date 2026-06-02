@@ -50,8 +50,7 @@ function generateClubResult(data = null, players = []) {
 }
 
 async function searchById(clubId) {
-    if (!clubId)
-        throw new Error('Club ID is required');
+    if (!clubId) return null;
 
     const data = await request(
         `/clubs/info?platform=common-gen5&clubIds=${clubId}`
@@ -61,8 +60,7 @@ async function searchById(clubId) {
 }
 
 async function searchByName(name) {
-    if (!name)
-        throw new Error('Name is required');
+    if (!name) return null;
 
     const data = await request(
         `/allTimeLeaderboard/search?platform=common-gen5&clubName=${encodeURIComponent(name)}`
@@ -89,14 +87,13 @@ async function getById(clubId) {
 }
 
 async function getMembers(clubId) {
-    if (!clubId)
-        throw new Error('Club ID is required');
+    if (!clubId) return null;
 
     const response = await request(`/members/stats?platform=common-gen5&clubId=${clubId}`);
 
     return response?.members?.map(
         mapper.player
-    ) || [];
+    ) || []
 }
 
 module.exports = {
