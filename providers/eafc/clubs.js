@@ -82,8 +82,6 @@ async function generateClubResult(data = null, players = []) {
 
     const emblemURL = await generateURLEmblem(data?.clubId, data?.clubInfo?.customKit?.crestAssetId);
 
-    console.log(emblemURL);
-
     return {
         id: Number(data?.clubId),
         name: data?.clubInfo?.name || data?.name,
