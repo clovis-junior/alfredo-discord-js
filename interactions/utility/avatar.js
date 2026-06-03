@@ -26,7 +26,7 @@ module.exports = {
     },
 
     async execute(client, interaction) {
-        const member = interaction.options.getMember('usuario') ||
+        const member = interaction.options.getMember('user') ||
             interaction.member;
 
         return interaction.reply({
