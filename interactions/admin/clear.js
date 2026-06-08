@@ -18,19 +18,21 @@ module.exports = {
     async execute(client, interaction) {
         const amount = interaction.options.getInteger('size');
 
-        await interaction.deferReply({
-            content: 'Fazendo a faxina...',
-            flags: MessageFlags.Ephemeral
-        });
+        await interaction.deferReply();
 
         try {
+            await interaction.editReply({
+                content: 'Fazendo a faxina...',
+                flags: MessageFlags.Ephemeral
+            });
+
             const deleted = await interaction.channel.bulkDelete(amount, true);
 
             await interaction.editReply({
                 content: `🗑️ Excluí **${deleted.size} mensagens**.`
             })
         } catch (err) {
-            console.error('[clear]', err);
+            console.error(err);
 
             await interaction.editReply({
                 content: '❌ Ocorreu um erro ao excluir as mensagens.'
