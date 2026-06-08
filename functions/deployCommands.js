@@ -46,40 +46,24 @@ async function deployCommands() {
         delete require.cache[require.resolve(file)];
         const command = require(file);
 
-        if (!command?.data || typeof command.data.toJSON !== 'function') {
+        if (!command?.data || typeof command.data.toJSON !== 'function')
             continue;
-        }
 
         commands.push(command.data.toJSON());
-        console.log(`-> Comando "${command.name}" preparado para deploy.`);
+        console.log(`-> Comandos "${command.data.name}" preparados para deploy.`);
     }
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
     try {
-        // limpa comandos globais antigos
+        console.log('Enviando comandos globais para a API do Discord...');
+
         await rest.put(
             Routes.applicationCommands(process.env.DISCORD_CLIENT_ID),
-            { body: [] }
+            { body: commands }
         );
-
-        console.log('Comandos globais antigos removidos!');
-
-        const guilds = await rest.get(Routes.userGuilds());
-
-        for (const guild of guilds) {
-            await rest.put(
-                Routes.applicationGuildCommands(
-                    process.env.DISCORD_CLIENT_ID,
-                    guild.id
-                ),
-                { body: commands }
-            );
-
-            console.log(`-> Comandos registrados em "${guild.name}"`);
-        }
-
         console.log('Comandos registrados em todos os servidores!');
+        return;
     } catch (error) {
         console.error('Erro ao registrar os comandos:', error);
     }
