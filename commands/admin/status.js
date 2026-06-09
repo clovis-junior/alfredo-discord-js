@@ -46,7 +46,7 @@ module.exports = {
 
     async execute(client, interaction) {
         const status = interaction.options.getString('status');
-        const activity = interaction.options.getInteger('atividade');
+        const activity = interaction.options.getInteger('atividade', false);
         const description = interaction.options.getString('detalhe');
 
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
@@ -55,13 +55,13 @@ module.exports = {
             const presence = { status: status };
 
             if (description) {
-                activitiesObj = {
+                const activitiesObj = {
                     name: description,
                     type: activity ?? ActivityType.Playing
                 };
                 
                 if (activity === ActivityType.Streaming)
-                    activitiesObj.activities.url = urlCheck(description) ? description : 'https://twitch.tv';
+                    activitiesObj.url = urlCheck(description) || 'https://twitch.tv';
 
                 presence.activities = [activitiesObj]
             }
@@ -70,14 +70,12 @@ module.exports = {
 
             await interaction.editReply({
                 content: '✅ Meu status foi alterado!',
-                flags: MessageFlags.Ephemeral
             })
         } catch (err) {
             console.error(err);
 
             await interaction.editReply({
-                content: '❌ Ocorreu um erro ao alterar o status.',
-                flags: MessageFlags.Ephemeral
+                content: '❌ Ocorreu um erro ao alterar o status.'
             })
         }
     }

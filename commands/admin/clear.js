@@ -18,12 +18,13 @@ module.exports = {
     async execute(client, interaction) {
         const amount = interaction.options.getInteger('size');
 
-        await interaction.deferReply();
+        await interaction.deferReply({
+            flags: MessageFlags.Ephemeral
+        });
 
         try {
             await interaction.editReply({
-                content: 'Fazendo a faxina...',
-                flags: MessageFlags.Ephemeral
+                content: 'Fazendo a faxina...'
             });
 
             const deleted = await interaction.channel.bulkDelete(amount, true);

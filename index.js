@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 
+const loadCommands = require('./functions/commandLoader');
+
 console.time('-> Tempo de inicialização');
 
 const client = new Client({
@@ -50,48 +52,12 @@ for (const file of events) {
 
 /* Import Interactions ------------------------------------------ */
 
-console.log('Carregando comandos..');
+const {
+    commands,
+    builders
+} = loadCommands();
 
-const interactionsPath = path.join(__dirname, 'interactions');
-const interactionEntries = fs.readdirSync(interactionsPath, { withFileTypes: true });
-
-for (const entry of interactionEntries) {
-    const entryPath = path.join(interactionsPath, entry.name);
-
-    // Se for arquivo .js direto em /interactions
-    if (entry.isFile() && entry.name.endsWith('.js')) {
-        const interaction = require(entryPath);
-
-        if (!interaction.name || typeof interaction.execute !== 'function') {
-            console.warn(`-> Comando inválido ignorado: ${entry.name}`);
-            continue;
-        }
-
-        client.interactions.set(interaction.name, interaction);
-        console.log(`-> Comando "${interaction.name}" carregado com sucesso!`);
-        continue;
-    }
-
-    // Se for pasta
-    if (entry.isDirectory()) {
-        const files = fs
-            .readdirSync(entryPath)
-            .filter(file => file.endsWith('.js'));
-
-        for (const file of files) {
-            const filePath = path.join(entryPath, file);
-            const interaction = require(filePath);
-
-            if (!interaction.name || typeof interaction.execute !== 'function') {
-                console.warn(`-> Comando inválido ignorado: ${entry.name}/${file}`);
-                continue;
-            }
-
-            client.interactions.set(interaction.name, interaction);
-            console.log(`-> Comando "${interaction.name}" carregado com sucesso!`);
-        }
-    }
-}
+client.interactions = commands;
 
 /* Start ------------------------------------------ */
 

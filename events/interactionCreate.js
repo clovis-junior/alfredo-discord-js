@@ -9,8 +9,17 @@ module.exports = {
         
         if (!command) return;
 
+        const subcommandName =
+            interaction.options.getSubcommand();
+
+        const subcommand =
+            command.subcommands.get(subcommandName);
+
+        if (!subcommand)
+            return;
+
         try {
-            await command.execute(client, interaction);
+            await subcommand.execute(client, interaction);
         } catch (err) {
             console.error(`[interactionCreate] Comando: ${interaction.commandName}`, err);
 
@@ -22,14 +31,15 @@ module.exports = {
                 await interaction.followUp({
                     content: message,
                     ephemeral: true
-                }).catch(() => {});
-                return;
+                });
+                
+                return
             }
 
             await interaction.reply({
                 content: message,
                 ephemeral: true
-            }).catch(() => {});
+            })
         }
     }
 };
