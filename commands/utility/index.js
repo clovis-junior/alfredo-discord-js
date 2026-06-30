@@ -1,4 +1,4 @@
 module.exports = {
-    name: 'utility',
-    description: 'Comandos úteis'
+  name: 'utility',
+  description: 'Comandos úteis'
 }

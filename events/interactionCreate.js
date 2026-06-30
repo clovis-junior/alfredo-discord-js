@@ -1,45 +1,45 @@
 module.exports = {
-    name: 'interactionCreate',
-    once: false,
+  name: 'interactionCreate',
+  once: false,
 
-    async execute(client, interaction) {
-        if (!interaction.isChatInputCommand()) return;
+  async execute(client, interaction) {
+    if (!interaction.isChatInputCommand()) return;
 
-        const command = client.interactions.get(interaction.commandName);
-        
-        if (!command) return;
+    const command = client.interactions.get(interaction.commandName);
 
-        const subcommandName =
-            interaction.options.getSubcommand();
+    if (!command) return;
 
-        const subcommand =
-            command.subcommands.get(subcommandName);
+    const subcommandName =
+      interaction.options.getSubcommand();
 
-        if (!subcommand)
-            return;
+    const subcommand =
+      command.subcommands.get(subcommandName);
 
-        try {
-            await subcommand.execute(client, interaction);
-        } catch (err) {
-            console.error(`[interactionCreate] Comando: ${interaction.commandName}`, err);
+    if (!subcommand)
+      return;
 
-            const message = process.env.NODE_ENV === 'development'
-            ? `Ocorreu um erro na execução:\n\`\`\`${String(err)}\`\`\``
-            : '❌ Ocorreu um erro ao executar este comando.';
+    try {
+      await subcommand.execute(client, interaction);
+    } catch (err) {
+      console.error(`[interactionCreate] Comando: ${interaction.commandName}`, err);
 
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({
-                    content: message,
-                    ephemeral: true
-                });
-                
-                return
-            }
+      const message = process.env.NODE_ENV === 'development'
+        ? `Ocorreu um erro na execução:\n\`\`\`${String(err)}\`\`\``
+        : '❌ Ocorreu um erro ao executar este comando.';
 
-            await interaction.reply({
-                content: message,
-                ephemeral: true
-            })
-        }
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({
+          content: message,
+          ephemeral: true
+        });
+
+        return
+      }
+
+      await interaction.reply({
+        content: message,
+        ephemeral: true
+      })
     }
+  }
 };

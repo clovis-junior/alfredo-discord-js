@@ -9,18 +9,18 @@ const loadCommands = require('./functions/commandLoader');
 console.time('-> Tempo de inicialização');
 
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildMessageTyping,
-        GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.DirectMessageTyping,
-        GatewayIntentBits.DirectMessageReactions,
-        GatewayIntentBits.MessageContent
-    ]
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.MessageContent
+  ]
 });
 
 client.interactions = new Collection();
@@ -35,26 +35,26 @@ const eventsPath = path.join(__dirname, 'events');
 const events = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const file of events) {
-    const event = require(path.join(eventsPath, file));
+  const event = require(path.join(eventsPath, file));
 
-    if (!event.name || typeof event.execute !== 'function') {
-        console.warn(`-> Evento inválido ignorado: ${file}`);
-        continue;
-    }
+  if (!event.name || typeof event.execute !== 'function') {
+    console.warn(`-> Evento inválido ignorado: ${file}`);
+    continue;
+  }
 
-    if (event.once)
-        client.once(event.name, (...args) => event.execute(client, ...args));
-    else
-        client.on(event.name, (...args) => event.execute(client, ...args));
+  if (event.once)
+    client.once(event.name, (...args) => event.execute(client, ...args));
+  else
+    client.on(event.name, (...args) => event.execute(client, ...args));
 
-    console.log(`-> Evento "${event.name}" carregado com sucesso!`);
+  console.log(`-> Evento "${event.name}" carregado com sucesso!`);
 }
 
 /* Import Interactions ------------------------------------------ */
 
 const {
-    commands,
-    builders
+  commands,
+  builders
 } = loadCommands();
 
 client.interactions = commands;

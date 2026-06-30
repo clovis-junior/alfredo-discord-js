@@ -5,25 +5,25 @@ const { createSubcommandGroup } = require('../functions/createSubcommandGroup');
 const name = 'utility';
 
 const {
-    builder,
-    subcommands
+  builder,
+  subcommands
 } = createSubcommandGroup(
-    name,
-    'Comandos úteis',
-    path.join(__dirname, name)
+  name,
+  'Comandos úteis',
+  path.join(__dirname, name)
 );
 
 module.exports = {
-    name: name,
-    data: builder,
+  name: name,
+  data: builder,
 
-    async execute(client, interaction) {
-        const subcommandName = interaction.options.getSubcommand();
-        const subcommand = subcommands.get(subcommandName);
+  async execute(client, interaction) {
+    const subcommandName = interaction.options.getSubcommand();
+    const subcommand = subcommands.get(subcommandName);
 
-        if (!subcommand)
-            return;
+    if (!subcommand)
+      return;
 
-        await subcommand.execute(client, interaction)
-    }
+    await subcommand.execute(client, interaction)
+  }
 };

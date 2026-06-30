@@ -1,4 +1,4 @@
 module.exports = {
-    name: 'admin',
-    description: 'Comandos administrativos'
+  name: 'admin',
+  description: 'Comandos administrativos'
 }

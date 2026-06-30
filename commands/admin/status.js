@@ -1,17 +1,17 @@
 const { SlashCommandBuilder, ActivityType, MessageFlags, PermissionsBitField } = require('discord.js');
 
 const statusOptions = [
-   { name: 'Online', value: 'online' }, 
-   { name: 'Ausente', value: 'idle' },
-   { name: 'Não Perturbe', value: 'dnd' },
-   { name: 'Invisivel', value: 'invisible' }
+  { name: 'Online', value: 'online' },
+  { name: 'Ausente', value: 'idle' },
+  { name: 'Não Perturbe', value: 'dnd' },
+  { name: 'Invisivel', value: 'invisible' }
 ];
 
 const activitiesOptions = [
-   { name: 'Jogando', value: ActivityType.Playing },
-   { name: 'Transmitindo', value: ActivityType.Streaming },
-   { name: 'Ouvindo', value: ActivityType.Listening },
-   { name: 'Assistindo', value: ActivityType.Watching }
+  { name: 'Jogando', value: ActivityType.Playing },
+  { name: 'Transmitindo', value: ActivityType.Streaming },
+  { name: 'Ouvindo', value: ActivityType.Listening },
+  { name: 'Assistindo', value: ActivityType.Watching }
 ];
 
 function urlCheck(value) {
@@ -20,63 +20,63 @@ function urlCheck(value) {
 }
 
 module.exports = {
-    name: 'status',
-    data: {
-        description: 'Define o status do Alfredo',
-        permissions: [PermissionsBitField.Flags.Administrator],
-        options: [{
-            type: 3,
-            name: 'status',
-            description: 'Status',
-            required: true,
-            choices: statusOptions
-        },{
-            type: 4,
-            name: 'atividade',
-            description: 'Atividade',
-            required: false,
-            choices: activitiesOptions
-        },{
-            type: 3,
-            name: 'detalhe',
-            description: 'Detalhe',
-            required: false
-        }]
-    },
+  name: 'status',
+  data: {
+    description: 'Define o status do Alfredo',
+    permissions: [PermissionsBitField.Flags.Administrator],
+    options: [{
+      type: 3,
+      name: 'status',
+      description: 'Status',
+      required: true,
+      choices: statusOptions
+    }, {
+      type: 4,
+      name: 'atividade',
+      description: 'Atividade',
+      required: false,
+      choices: activitiesOptions
+    }, {
+      type: 3,
+      name: 'detalhe',
+      description: 'Detalhe',
+      required: false
+    }]
+  },
 
-    async execute(client, interaction) {
-        const status = interaction.options.getString('status');
-        const activity = interaction.options.getInteger('atividade', false);
-        const description = interaction.options.getString('detalhe');
+  async execute(client, interaction) {
+    const status = interaction.options.getString('status');
+    const activity = interaction.options.getInteger('atividade', false);
+    const description = interaction.options.getString('detalhe');
 
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-        try {
-            const presence = { status: status };
+    try {
+      const presence = { status: status };
 
-            if (description) {
-                const activitiesObj = {
-                    name: description,
-                    type: activity ?? ActivityType.Playing
-                };
-                
-                if (activity === ActivityType.Streaming)
-                    activitiesObj.url = urlCheck(description) || 'https://twitch.tv';
+      if (description) {
+        const activitiesObj = {
+          name: description,
+          type: activity ?? ActivityType.Playing
+        };
 
-                presence.activities = [activitiesObj]
-            }
+        if (activity === ActivityType.Streaming)
+          activitiesObj.url = urlCheck(description) || 'https://twitch.tv';
 
-            client.user.setPresence(presence);
+        presence.activities = [activitiesObj]
+      }
 
-            await interaction.editReply({
-                content: '✅ Meu status foi alterado!',
-            })
-        } catch (err) {
-            console.error(err);
+      client.user.setPresence(presence);
 
-            await interaction.editReply({
-                content: '❌ Ocorreu um erro ao alterar o status.'
-            })
-        }
+      await interaction.editReply({
+        content: '✅ Meu status foi alterado!',
+      })
+    } catch (err) {
+      console.error(err);
+
+      await interaction.editReply({
+        content: '❌ Ocorreu um erro ao alterar o status.'
+      })
     }
+  }
 };

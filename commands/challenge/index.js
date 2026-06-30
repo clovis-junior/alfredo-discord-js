@@ -1,4 +1,4 @@
 module.exports = {
-    name: 'challenge',
-    description: 'Sistema competitivo'
+  name: 'challenge',
+  description: 'Sistema competitivo'
 }
